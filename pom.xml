@@ -16,5 +16,6 @@
         <module>basicmall-product</module>
         <module>basicmall-ware</module>
         <module>renren-fast</module>
+        <module>basicmall-common</module>
     </modules>
 </project>
