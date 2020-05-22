@@ -17,5 +17,7 @@
         <module>basicmall-ware</module>
         <module>renren-fast</module>
         <module>basicmall-common</module>
+        <module>basicmall-gateway</module>
+        <module>basicmall-third-party</module>
     </modules>
 </project>

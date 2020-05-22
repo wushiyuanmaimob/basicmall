@@ -3,6 +3,7 @@ package com.wushiyuan.basicmall.product;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * 1.整合 MyBatis-Plus
@@ -19,9 +20,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *              2.配置 MyBatis-Plus
  *                  1).使用 @MapperScan
  *                  2).告诉 Mybatis-Plus sql映射配置文件
+ *
+ * 2.逻辑删除
  */
 @MapperScan("com.wushiyuan.basicmall.product.dao")
 @SpringBootApplication
+@EnableDiscoveryClient
 public class BasicmallProductApplication {
 
     public static void main(String[] args) {
