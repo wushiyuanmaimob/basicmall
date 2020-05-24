@@ -22,6 +22,14 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  *                  2).告诉 Mybatis-Plus sql映射配置文件
  *
  * 2.逻辑删除
+ * 3.JSR303 规定了数据校验相关标准
+ *      1)、给 Bean 添加校验注解 （所有注解类在 javax.validation.constraints包中）可以定义自己的message提示
+ *      2)、开启校验功能 @Valid
+ *      3)、给校验的 bean 后紧跟 BindingResult，可以获取到校验的结果
+ *
+ * 4.统一的异常处理
+ * @ControllerAdvice
+ * 1)、
  */
 @MapperScan("com.wushiyuan.basicmall.product.dao")
 @SpringBootApplication
