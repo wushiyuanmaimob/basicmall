@@ -26,6 +26,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  *      1)、给 Bean 添加校验注解 （所有注解类在 javax.validation.constraints包中）可以定义自己的message提示
  *      2)、开启校验功能 @Valid
  *      3)、给校验的 bean 后紧跟 BindingResult，可以获取到校验的结果
+ *      4)、分组校验
+ *         1)、 @NotBlank(message = "品牌名必须提交", groups = {AddGroup.class, UpdateGroup.class})
+ *         给校验注解标注什么情况需要标注
+ *         2)、@Validated({AddGroup.class})
  *
  * 4.统一的异常处理
  * @ControllerAdvice
