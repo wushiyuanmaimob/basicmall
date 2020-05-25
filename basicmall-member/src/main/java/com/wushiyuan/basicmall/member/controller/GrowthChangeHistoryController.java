@@ -3,6 +3,7 @@ package com.wushiyuan.basicmall.member.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,13 +42,13 @@ public class GrowthChangeHistoryController {
         return R.ok().put("page", page);
     }
 
-    @Value("${cp}")
-    private String cp;
-    @RequestMapping("/test")
-    public R test()
-    {
-        return R.ok().put("cp", cp);
-    }
+//    @Value("${cp}")
+//    private String cp;
+//    @RequestMapping("/test")
+//    public R test()
+//    {
+//        return R.ok().put("cp", cp);
+//    }
 
 
     /**

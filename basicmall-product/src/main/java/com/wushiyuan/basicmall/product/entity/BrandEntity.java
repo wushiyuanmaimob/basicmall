@@ -40,7 +40,7 @@ public class BrandEntity implements Serializable {
 	/**
 	 * 品牌logo地址
 	 */
-	@NotEmpty(message = "logo地址不能为空", groups = {AddGroup.class, UpdateGroup.class})
+	@NotEmpty(message = "logo地址不能为空", groups = {AddGroup.class})
 	@URL(message = "logo必须是一个合法的url地址", groups = {AddGroup.class, UpdateGroup.class})
 	private String logo;
 	/**
@@ -55,7 +55,7 @@ public class BrandEntity implements Serializable {
 	 * 检索首字母
 	 */
 	@NotEmpty(message = "检索首字母不能为空", groups = {AddGroup.class, UpdateGroup.class})
-	@Pattern(regexp = "/^[a-zA-z]$/", message = "检索首字母必须是一个字母", groups = {AddGroup.class, UpdateGroup.class})
+	@Pattern(regexp = "^[a-zA-z]$", message = "检索首字母必须是一个字母", groups = {AddGroup.class, UpdateGroup.class})
 	private String firstLetter;
 	/**
 	 * 排序
