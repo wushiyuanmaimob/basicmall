@@ -1,4 +1,4 @@
-package com.wushiyuan.basicmall.product.controller;
+package com.wushiyuan.basicmall.product.app;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -10,32 +10,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wushiyuan.basicmall.product.entity.AttrEntity;
-import com.wushiyuan.basicmall.product.service.AttrService;
+import com.wushiyuan.basicmall.product.entity.SkuInfoEntity;
+import com.wushiyuan.basicmall.product.service.SkuInfoService;
 import com.wushiyuan.common.utils.PageUtils;
 import com.wushiyuan.common.utils.R;
 
 
 
 /**
- * 商品属性
+ * sku信息
  *
  * @author wushiyuan
  * @email wushiyuanwork@outlook.com
  * @date 2020-05-12 10:26:45
  */
 @RestController
-@RequestMapping("product/attr")
-public class AttrController {
+@RequestMapping("product/skuinfo")
+public class SkuInfoController {
     @Autowired
-    private AttrService attrService;
+    private SkuInfoService skuInfoService;
 
     /**
      * 列表
      */
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = attrService.queryPage(params);
+        PageUtils page = skuInfoService.queryPage(params);
 
         return R.ok().put("page", page);
     }
@@ -44,19 +44,19 @@ public class AttrController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{attrId}")
-    public R info(@PathVariable("attrId") Long attrId){
-		AttrEntity attr = attrService.getById(attrId);
+    @RequestMapping("/info/{skuId}")
+    public R info(@PathVariable("skuId") Long skuId){
+		SkuInfoEntity skuInfo = skuInfoService.getById(skuId);
 
-        return R.ok().put("attr", attr);
+        return R.ok().put("skuInfo", skuInfo);
     }
 
     /**
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody AttrEntity attr){
-		attrService.save(attr);
+    public R save(@RequestBody SkuInfoEntity skuInfo){
+		skuInfoService.save(skuInfo);
 
         return R.ok();
     }
@@ -65,8 +65,8 @@ public class AttrController {
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody AttrEntity attr){
-		attrService.updateById(attr);
+    public R update(@RequestBody SkuInfoEntity skuInfo){
+		skuInfoService.updateById(skuInfo);
 
         return R.ok();
     }
@@ -75,8 +75,8 @@ public class AttrController {
      * 删除
      */
     @RequestMapping("/delete")
-    public R delete(@RequestBody Long[] attrIds){
-		attrService.removeByIds(Arrays.asList(attrIds));
+    public R delete(@RequestBody Long[] skuIds){
+		skuInfoService.removeByIds(Arrays.asList(skuIds));
 
         return R.ok();
     }

@@ -1,6 +1,7 @@
 package com.wushiyuan.basicmall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wushiyuan.basicmall.product.vo.Catelog2Vo;
 import com.wushiyuan.common.utils.PageUtils;
 import com.wushiyuan.basicmall.product.entity.CategoryEntity;
 
@@ -21,5 +22,13 @@ public interface CategoryService extends IService<CategoryEntity> {
     List<CategoryEntity> listWithTree();
 
     void removeMnuByIds(List<Long> asList);
+
+    List<Long> findCategoryPath(Long catelogId);
+
+    void updateCascade(CategoryEntity category);
+
+    List<CategoryEntity> getLevel1Categorys();
+
+    Map<String, List<Catelog2Vo>> getCatalogJson();
 }
 

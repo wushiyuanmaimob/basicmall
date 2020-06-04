@@ -1,18 +1,14 @@
-package com.wushiyuan.basicmall.product.controller;
+package com.wushiyuan.basicmall.product.app;
 
 import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.wushiyuan.basicmall.product.entity.CategoryBrandRelationEntity;
 import com.wushiyuan.basicmall.product.service.CategoryBrandRelationService;
-import com.wushiyuan.common.utils.PageUtils;
 import com.wushiyuan.common.utils.R;
 
 
@@ -33,11 +29,13 @@ public class CategoryBrandRelationController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = categoryBrandRelationService.queryPage(params);
+    @GetMapping("/catelog/list")
+    public R list(@RequestParam("brandId") Long brandId) {
+        List<CategoryBrandRelationEntity> data = categoryBrandRelationService.list(
+                new QueryWrapper<CategoryBrandRelationEntity>().eq("brand_id", brandId)
+        );
 
-        return R.ok().put("page", page);
+        return R.ok().put("data", data);
     }
 
 
@@ -56,7 +54,7 @@ public class CategoryBrandRelationController {
      */
     @RequestMapping("/save")
     public R save(@RequestBody CategoryBrandRelationEntity categoryBrandRelation){
-		categoryBrandRelationService.save(categoryBrandRelation);
+		categoryBrandRelationService.saveDetail(categoryBrandRelation);
 
         return R.ok();
     }

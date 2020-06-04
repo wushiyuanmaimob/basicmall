@@ -30,6 +30,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  *         1)、 @NotBlank(message = "品牌名必须提交", groups = {AddGroup.class, UpdateGroup.class})
  *         给校验注解标注什么情况需要标注
  *         2)、@Validated({AddGroup.class})
+ *         3)、默认没有指定分组校验注解 @NotBlank ，在分组校验 @Validated({AddGroup.class} 情况下不生效，只会在 @Validated 生效；
  *
  *      5)、自定义校验
  *          1）、编写一个自定义的校验注解
@@ -38,7 +39,17 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  *
  * 4.统一的异常处理
  * @ControllerAdvice
- * 1)、
+ * 1)、编写异常处理类，使用@ControllerAdvice
+ * 2)、使用@ExceptionHandler标注方法可以处理的异常
+ *
+ * 5、模板引擎
+ *  1）、thymeleaf-start ;关闭缓存
+ *  2）、静态资源都放在 static 文件夹下就可以按照路径直接访问
+ *  3）、页面放在 templates下，直接访问
+ *      SprintBoot，访问项目的时候，默认会找 index
+ *  4）、页面修改不重启服务器实时更新
+ *      1）、引入 dev-tools
+ *      2）、ctrl+shift +F9 重新编译当前页面
  */
 @MapperScan("com.wushiyuan.basicmall.product.dao")
 @SpringBootApplication

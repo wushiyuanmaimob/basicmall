@@ -1,8 +1,9 @@
-package com.wushiyuan.basicmall.product.controller;
+package com.wushiyuan.basicmall.product.app;
 
 import java.util.Arrays;
 import java.util.Map;
 
+import com.wushiyuan.basicmall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,32 +11,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wushiyuan.basicmall.product.entity.CommentReplayEntity;
-import com.wushiyuan.basicmall.product.service.CommentReplayService;
+import com.wushiyuan.basicmall.product.entity.AttrEntity;
+import com.wushiyuan.basicmall.product.service.AttrService;
 import com.wushiyuan.common.utils.PageUtils;
 import com.wushiyuan.common.utils.R;
 
 
 
 /**
- * 商品评价回复关系
+ * 商品属性
  *
  * @author wushiyuan
  * @email wushiyuanwork@outlook.com
  * @date 2020-05-12 10:26:45
  */
 @RestController
-@RequestMapping("product/commentreplay")
-public class CommentReplayController {
+@RequestMapping("product/attr")
+public class AttrController {
     @Autowired
-    private CommentReplayService commentReplayService;
+    private AttrService attrService;
 
     /**
      * 列表
      */
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = commentReplayService.queryPage(params);
+        PageUtils page = attrService.queryPage(params);
 
         return R.ok().put("page", page);
     }
@@ -44,19 +45,19 @@ public class CommentReplayController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{id}")
-    public R info(@PathVariable("id") Long id){
-		CommentReplayEntity commentReplay = commentReplayService.getById(id);
+    @RequestMapping("/info/{attrId}")
+    public R info(@PathVariable("attrId") Long attrId){
+		AttrEntity attr = attrService.getById(attrId);
 
-        return R.ok().put("commentReplay", commentReplay);
+        return R.ok().put("attr", attr);
     }
 
     /**
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody CommentReplayEntity commentReplay){
-		commentReplayService.save(commentReplay);
+    public R save(@RequestBody AttrVo attr){
+		attrService.saveAttr(attr);
 
         return R.ok();
     }
@@ -65,8 +66,8 @@ public class CommentReplayController {
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody CommentReplayEntity commentReplay){
-		commentReplayService.updateById(commentReplay);
+    public R update(@RequestBody AttrEntity attr){
+		attrService.updateById(attr);
 
         return R.ok();
     }
@@ -75,8 +76,8 @@ public class CommentReplayController {
      * 删除
      */
     @RequestMapping("/delete")
-    public R delete(@RequestBody Long[] ids){
-		commentReplayService.removeByIds(Arrays.asList(ids));
+    public R delete(@RequestBody Long[] attrIds){
+		attrService.removeByIds(Arrays.asList(attrIds));
 
         return R.ok();
     }

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>2345</title>
+</head>
+<body>
+    <h1>basicmall by wsy</h1>
+    <div>
+        <ul>
+            <li th:each=" category : ${categorys}">
+                <a href="#" th:attr="ctg-data=${category.catId}"><b th:text="${category.getName()}"></b></a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

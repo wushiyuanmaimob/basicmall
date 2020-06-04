@@ -32,5 +32,6 @@
         <module>basicmall-common</module>
         <module>basicmall-gateway</module>
         <module>basicmall-third-party</module>
+        <module>basicmall-search</module>
     </modules>
 </project>

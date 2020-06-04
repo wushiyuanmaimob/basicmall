@@ -1,4 +1,4 @@
-package com.wushiyuan.basicmall.product.controller;
+package com.wushiyuan.basicmall.product.app;
 
 import java.util.Arrays;
 import java.util.Map;
