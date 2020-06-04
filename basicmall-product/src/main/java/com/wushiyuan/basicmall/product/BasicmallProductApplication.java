@@ -50,6 +50,20 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  *  4）、页面修改不重启服务器实时更新
  *      1）、引入 dev-tools
  *      2）、ctrl+shift +F9 重新编译当前页面
+ *
+ *  6、整合 redis
+ *      1）、引入 data-redis-starter
+ *      2）、简单配置 redis 的 hosts 等信息
+ *      3）、使用 SpringBoot 自动配置好的 StringRedisTemplate 来操作 redis
+ *
+ *  7 、整合 redisson
+ *      1）、引入依赖<!-- https://mvnrepository.com/artifact/org.redisson/redisson -->
+ * <dependency>
+ *     <groupId>org.redisson</groupId>
+ *     <artifactId>redisson</artifactId>
+ *     <version>3.13.0</version>
+ * </dependency>
+ *      2）、配置
  */
 @MapperScan("com.wushiyuan.basicmall.product.dao")
 @SpringBootApplication

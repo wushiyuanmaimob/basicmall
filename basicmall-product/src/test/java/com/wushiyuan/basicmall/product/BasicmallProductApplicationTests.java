@@ -6,6 +6,7 @@ import com.wushiyuan.basicmall.product.service.impl.CategoryServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -46,6 +47,14 @@ class BasicmallProductApplicationTests {
     @Test
     void testFindCategoryPaths() {
         List<Long> categoryPath = categoryService.findCategoryPath(225L);
+    }
+
+    @Autowired
+    RedissonClient redissonClient;
+
+    @Test
+    void testRedissonClient() {
+        System.out.println(redissonClient);
     }
 
 }
