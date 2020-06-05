@@ -9,6 +9,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -97,7 +98,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     }
 
     @Override
+
+                //每一个需要缓存的数据都来指定要放到那个名字的缓存【缓存分区，按照业务来区分】
+    @Cacheable({"category"})  //代表当前方法的结果需要缓存，如果缓存中有，方法不用调用。如果缓存中没有，会调用用方法，最后将方法的结果放入缓存
     public List<CategoryEntity> getLevel1Categorys() {
+        long id = Thread.currentThread().getId();
+        System.out.println("getLevel1Categorys" + id);
         List<CategoryEntity> categoryEntities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
 
         return categoryEntities;
