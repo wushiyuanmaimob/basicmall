@@ -4,8 +4,11 @@ import com.wushiyuan.basicmall.product.entity.CategoryEntity;
 import com.wushiyuan.basicmall.product.service.CategoryService;
 import com.wushiyuan.basicmall.product.vo.Catelog2Vo;
 import org.redisson.api.RLock;
+import org.redisson.api.RReadWriteLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 public class IndexController {
@@ -21,8 +25,11 @@ public class IndexController {
     @Resource
     CategoryService categoryService;
 
-    @Autowired
+    @Resource
     RedissonClient redissonClient;
+
+    @Autowired
+    StringRedisTemplate redisTemplate;
 
     @GetMapping({"/", "/index.html"})
     public String indexPage(Model model) {
@@ -60,5 +67,60 @@ public class IndexController {
         }
 
         return "world";
+    }
+
+    //保证一定能读到最新数据，修改期间，写锁是一个排它锁（互斥锁）。读锁是一个共享锁
+    //写锁没释放，读就必须等待
+
+    //读 + 读：相当于无锁
+
+    //写 + 读：等待写锁释放
+    //写 + 写：阻塞方式
+    //读 + 写：有读锁，写也需要等待
+
+    //只要有写的存在，都必须等待
+    @ResponseBody
+    @GetMapping("/write")
+    public String write() {
+        RReadWriteLock rwLock = redissonClient.getReadWriteLock("my-read-write-lock");
+        RLock lock = rwLock.writeLock();
+        String s = "";
+        try {
+            //1、写数据加写锁
+            lock.lock();
+            System.out.println("写锁加锁成功" + Thread.currentThread().getId());
+            s = UUID.randomUUID().toString();
+            Thread.sleep(30000);
+            redisTemplate.opsForValue().set("writeValue", s);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+            System.out.println("写锁释放成功" + Thread.currentThread().getId());
+        }
+
+        return s;
+    }
+
+    @ResponseBody
+    @GetMapping("/read")
+    public String read() {
+        RReadWriteLock rwLock = redissonClient.getReadWriteLock("my-read-write-lock");
+        RLock lock = rwLock.readLock();
+        String s = "";
+        try {
+            //2、读数据加读锁
+            lock.lock();
+            System.out.println("读锁加锁成功" + Thread.currentThread().getId());
+            s = redisTemplate.opsForValue().get("writeValue");
+            Thread.sleep(30000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+            System.out.println("读锁释放成功" + Thread.currentThread().getId());
+        }
+
+        return s;
     }
 }
