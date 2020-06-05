@@ -88,6 +88,16 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  *
  *              1）开启缓存功能 @EnableCaching
  *              2）只需要使用注解就能完成缓存操作
+ *              3）默认行为
+ *                  1）、如果缓存中有，方法不用调用
+ *                  2）、key默认自动
+ *                  3）、缓存的 value 的值，默认使用 jdk 序列化机制，将序列化后的数据存到 redis
+ *                  4）、默认 ttl 时间 -1
+ *
+ *                 自定义：
+ *                      1）、指定生成缓存使用的 key
+ *                      2）、指定缓存的数据的存活时间
+ *                      3）、将数据保存为 json 格式
  */
 @EnableCaching
 @MapperScan("com.wushiyuan.basicmall.product.dao")
