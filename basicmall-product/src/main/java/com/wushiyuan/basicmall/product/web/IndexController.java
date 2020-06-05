@@ -3,6 +3,7 @@ package com.wushiyuan.basicmall.product.web;
 import com.wushiyuan.basicmall.product.entity.CategoryEntity;
 import com.wushiyuan.basicmall.product.service.CategoryService;
 import com.wushiyuan.basicmall.product.vo.Catelog2Vo;
+import org.redisson.api.RCountDownLatch;
 import org.redisson.api.RLock;
 import org.redisson.api.RReadWriteLock;
 import org.redisson.api.RedissonClient;
@@ -12,6 +13,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -49,6 +51,7 @@ public class IndexController {
         return catalogJson;
     }
 
+    //可重入锁演示
     @ResponseBody
     @GetMapping("/hello")
     public String Hello() {
@@ -69,6 +72,7 @@ public class IndexController {
         return "world";
     }
 
+    //读写锁演示
     //保证一定能读到最新数据，修改期间，写锁是一个排它锁（互斥锁）。读锁是一个共享锁
     //写锁没释放，读就必须等待
 
@@ -123,4 +127,29 @@ public class IndexController {
 
         return s;
     }
+
+    //闭锁演示
+    /**
+     * 放假，锁门
+     * 5个班全部走完，才可以锁大门
+     * N 个线程全部执行完成，再执行其他业务逻辑
+     */
+    @ResponseBody
+    @GetMapping("/lockDoor")
+    public String lockDoor() throws InterruptedException {
+        RCountDownLatch door = redissonClient.getCountDownLatch("door");
+        door.trySetCount(5);
+        door.await();
+        return "放假了...";
+    }
+
+    @ResponseBody
+    @GetMapping("/gogo/{id}")
+    public String gogogo(@PathVariable("id") Long id) {
+
+        RCountDownLatch door = redissonClient.getCountDownLatch("door");
+        door.countDown();
+        return id + "班的人都走了...";
+    }
+
 }
