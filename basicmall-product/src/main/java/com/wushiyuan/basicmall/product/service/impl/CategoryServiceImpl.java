@@ -6,6 +6,8 @@ import com.wushiyuan.basicmall.product.service.CategoryBrandRelationService;
 import com.wushiyuan.basicmall.product.vo.Catelog2Vo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -36,6 +38,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Autowired
     private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    RedissonClient redisson;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -153,6 +158,36 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
             return getCatalogJsonFromDbWithLocalLock();
         }
+    }
+
+    /**
+     * 问题：缓存中的数据如何和数据库保存一致
+     * 两种常用方式：
+     *  1）、双写模式--写数据库的同时，更新缓存
+     *  2）、失效模式--写数据库的同时，删除缓存
+     *
+     *  最终一致性
+     *
+     *  保证：1、缓存中的所有数据都有过期时间，数据过期下一次查询触发主动更新
+     *      2、读写数据的时候，加上分布式的读写锁
+     * @return
+     */
+    public Map<String, List<Catelog2Vo>> getCatalogJsonFromDbWithRedissonLock() {
+
+        //1、锁的名字，锁的力度，越细越快
+        //所得粒度：具体缓存的是某个数据，11-号商品 product-11-lock product-12-lock
+        RLock lock = redisson.getLock("CatalogJson-lock");
+
+        Map<String, List<Catelog2Vo>> data = null;
+        try {
+            lock.lock();
+            data = getData();
+        }finally {
+            lock.unlock();
+        }
+
+        return data;
+
     }
 
     private Map<String, List<Catelog2Vo>> getData() {
