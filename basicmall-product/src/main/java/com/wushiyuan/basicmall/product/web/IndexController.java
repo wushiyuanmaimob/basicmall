@@ -3,10 +3,7 @@ package com.wushiyuan.basicmall.product.web;
 import com.wushiyuan.basicmall.product.entity.CategoryEntity;
 import com.wushiyuan.basicmall.product.service.CategoryService;
 import com.wushiyuan.basicmall.product.vo.Catelog2Vo;
-import org.redisson.api.RCountDownLatch;
-import org.redisson.api.RLock;
-import org.redisson.api.RReadWriteLock;
-import org.redisson.api.RedissonClient;
+import org.redisson.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -152,4 +149,29 @@ public class IndexController {
         return id + "班的人都走了...";
     }
 
+    //信号量演示
+    /**
+     * 车库停车
+     * 3个车位
+     *
+     * 信号量也可以用作分布式限流
+     */
+    @ResponseBody
+    @GetMapping("/park")
+    public String park() throws InterruptedException {
+        RSemaphore semaphore = redissonClient.getSemaphore("park");
+//        semaphore.acquire(1); 阻塞方式
+        boolean b = semaphore.tryAcquire(); //非阻塞方式
+
+        return "park =>" + b;
+    }
+
+    @ResponseBody
+    @GetMapping("/go")
+    public String go() {
+        RSemaphore semaphore = redissonClient.getSemaphore("park");
+        semaphore.release(1);
+
+        return "go";
+    }
 }
