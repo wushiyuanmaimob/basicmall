@@ -98,6 +98,11 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  *                      1）、指定生成缓存使用的 key
  *                      2）、指定缓存的数据的存活时间
  *                      3）、将数据保存为 json 格式
+ *                          自定义 RedisCacheConfiguration 即可
+ *
+ *       4）、Spring-Cache的不足
+ *       读模式
+ *
  */
 @EnableCaching
 @MapperScan("com.wushiyuan.basicmall.product.dao")
