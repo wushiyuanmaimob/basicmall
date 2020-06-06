@@ -5,7 +5,6 @@ import com.wushiyuan.basicmall.product.service.CategoryService;
 import com.wushiyuan.basicmall.product.vo.Catelog2Vo;
 import org.redisson.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
