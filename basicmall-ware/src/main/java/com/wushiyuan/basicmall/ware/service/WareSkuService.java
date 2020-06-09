@@ -1,9 +1,11 @@
 package com.wushiyuan.basicmall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wushiyuan.basicmall.ware.vo.SkuHasStockVo;
 import com.wushiyuan.common.utils.PageUtils;
 import com.wushiyuan.basicmall.ware.entity.WareSkuEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +18,7 @@ import java.util.Map;
 public interface WareSkuService extends IService<WareSkuEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    List<SkuHasStockVo> getSkusHasStock(List<Long> skuIds);
 }
 

@@ -16,5 +16,11 @@ import java.util.Map;
 public interface SpuInfoService extends IService<SpuInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    /**
+     * 商品商家
+     * @param spuId
+     */
+    void up(Long spuId);
 }
 

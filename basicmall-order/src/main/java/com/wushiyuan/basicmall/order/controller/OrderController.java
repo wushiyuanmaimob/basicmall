@@ -1,14 +1,15 @@
 package com.wushiyuan.basicmall.order.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
+import com.wushiyuan.basicmall.order.entity.OrderReturnReasonEntity;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.wushiyuan.basicmall.order.entity.OrderEntity;
 import com.wushiyuan.basicmall.order.service.OrderService;
@@ -29,6 +30,31 @@ import com.wushiyuan.common.utils.R;
 public class OrderController {
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+
+    @GetMapping("/sendMessage/{num}")
+    public R sendMessage(@PathVariable("num") Long num) {
+        for (int i = 0;i < num; i ++) {
+            if (i%2 == 0) {
+                OrderReturnReasonEntity reasonEntity = new OrderReturnReasonEntity();
+                reasonEntity.setId(1l);
+                reasonEntity.setCreateTime(new Date());
+                reasonEntity.setName("钱不够");
+                //1、发送消息，如果发送的消息是个对象，使用序列化机制，将对象写出去。类必须实现  Serializable 接口
+                //2、发送的对象可以是一个 json
+
+                rabbitTemplate.convertAndSend("hello-java-exchange", "hello.java", reasonEntity, new CorrelationData(UUID.randomUUID().toString()));
+            } else {
+                OrderEntity orderEntity = new OrderEntity();
+                orderEntity.setOrderSn(UUID.randomUUID().toString());
+                rabbitTemplate.convertAndSend("hello-java-exchange", "hello.java", orderEntity, new CorrelationData(UUID.randomUUID().toString()));
+            }
+        }
+
+        return R.ok();
+    }
 
     /**
      * 列表
