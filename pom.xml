@@ -33,5 +33,8 @@
         <module>basicmall-gateway</module>
         <module>basicmall-third-party</module>
         <module>basicmall-search</module>
+        <module>basicmall-cart</module>
+        <module>basicmall-auth-server</module>
+        <module>basicmall-seckill</module>
     </modules>
 </project>

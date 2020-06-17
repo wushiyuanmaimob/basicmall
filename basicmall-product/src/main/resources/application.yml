@@ -9,6 +9,11 @@ spring:
     port: 6379
   thymeleaf:
     cache: false
+  cloud:
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: localhost:8333
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml

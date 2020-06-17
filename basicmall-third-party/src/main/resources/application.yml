@@ -1,5 +1,5 @@
 server:
-  port: 30000
+  port: 35000
 
 spring:
   cloud:
@@ -9,3 +9,9 @@ spring:
       oss:
         endpoint: oss-cn-beijing.aliyuncs.com
         bucket: basicmall-hello
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+  application:
+    name: basicmall-third-party

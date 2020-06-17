@@ -50,4 +50,14 @@ spring:
         - id: basicmall_host_route
           uri: lb://basicmall-product
           predicates:
-            - Host=**.basicmall.com,basicmall.com
+            - Host=basicmall.com
+
+        - id: basicmall_cart_route
+          uri: lb://basicmall-cart
+          predicates:
+            - Host=cart.basicmall.com
+
+        - id: basicmall_auth_route
+          uri: lb://basicmall-auth-server
+          predicates:
+            - Host=auth.basicmall.com
