@@ -2,6 +2,7 @@ package com.wushiyuan.basicmall.auth.controller;
 
 import com.wushiyuan.basicmall.auth.feign.ThirdPartyFeignService;
 import com.wushiyuan.common.constant.AuthServerConstant;
+import com.wushiyuan.common.exception.BizCodeEnum;
 import com.wushiyuan.common.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -35,7 +36,9 @@ public class LoginController {
         String codeWithTime = redisTemplate.opsForValue().get(phoneRedisKey);
         if (null != codeWithTime) {
             long l = Long.parseLong(codeWithTime.split("_")[1]);
-            if (System.currentTimeMillis() - l > 60 * 1000) {
+            if (System.currentTimeMillis() - l < 60 * 1000) {
+                return R.error(BizCodeEnum.SMS_CODE_EXCEPTION.getCode(), BizCodeEnum.SMS_CODE_EXCEPTION.getMsg());
+            } else {
                 //60 秒以后再次请求才给发送
                 thirdPartyFeignService.sendCode(phone, code);
             }
