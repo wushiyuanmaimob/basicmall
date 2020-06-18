@@ -1,16 +1,18 @@
 package com.wushiyuan.basicmall.auth.controller;
 
+import com.wushiyuan.basicmall.auth.feign.MemberFeignService;
 import com.wushiyuan.basicmall.auth.feign.ThirdPartyFeignService;
+import com.wushiyuan.basicmall.auth.vo.UserRegistVo;
 import com.wushiyuan.common.constant.AuthServerConstant;
 import com.wushiyuan.common.exception.BizCodeEnum;
 import com.wushiyuan.common.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +25,9 @@ public class LoginController {
 
     @Autowired
     StringRedisTemplate redisTemplate;
+
+    @Autowired
+    MemberFeignService memberFeignService;
 
     @GetMapping("/sms/sendCode")
     public R sendCode(@RequestParam("phone") String phone) {
@@ -50,5 +55,46 @@ public class LoginController {
         redisTemplate.opsForValue().set(phoneRedisKey, code + "_" + System.currentTimeMillis(), 10, TimeUnit.MINUTES);
 
         return R.ok();
+    }
+
+    /**
+     * @Info 用户注册
+     * @Author wushiyuanwork@outlook.com
+     * @param userRegistVo : 注册信息
+     * @return com.wushiyuan.common.utils.R
+     * @Date 2020/6/18 16:11
+     * @Version
+     */
+    @PostMapping("regist")
+    public R regist(@Valid @RequestBody UserRegistVo userRegistVo) {
+        //验证两次密码是否一致
+        if (!userRegistVo.getPassword().equals(userRegistVo.getConfirmPassword())) {
+            Map<String, String> msg = new HashMap<>();
+            msg.put("confirmPassword", "确认密码错误");
+            return R.error(BizCodeEnum.AUTH_USER_EXCEPTION.getCode(), BizCodeEnum.AUTH_USER_EXCEPTION.getMsg()).put("data", msg);
+        }
+
+        //验证验证码
+        String codeRedisKey = AuthServerConstant.SMS_CODE_CACHE_PREFIX + userRegistVo.getPhone();
+        String codeWithTime = redisTemplate.opsForValue().get(codeRedisKey);
+        if (codeWithTime == null) {
+            Map<String, String> msg = new HashMap<>();
+            msg.put("code", "验证码错误");
+            return R.error(BizCodeEnum.AUTH_USER_EXCEPTION.getCode(), BizCodeEnum.AUTH_USER_EXCEPTION.getMsg()).put("data", msg);
+        }
+        String[] split = codeWithTime.split("_");
+        if (!userRegistVo.getCode().equals(split[0])) {
+            Map<String, String> msg = new HashMap<>();
+            msg.put("code", "验证码错误");
+            return R.error(BizCodeEnum.AUTH_USER_EXCEPTION.getCode(), BizCodeEnum.AUTH_USER_EXCEPTION.getMsg()).put("data", msg);
+        }
+
+        //删除 redis 中的验证码
+        redisTemplate.delete(codeRedisKey);
+
+        //调用远程服务进行注册
+        R r = memberFeignService.regist(userRegistVo);
+
+        return r;
     }
 }
