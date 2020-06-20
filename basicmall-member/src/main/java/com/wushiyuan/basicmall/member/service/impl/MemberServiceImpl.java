@@ -5,6 +5,7 @@ import com.wushiyuan.basicmall.member.entity.MemberLevelEntity;
 import com.wushiyuan.basicmall.member.enums.MemberLevelDefaultStatusEnum;
 import com.wushiyuan.basicmall.member.exception.PhoneExistException;
 import com.wushiyuan.basicmall.member.exception.UserNameExistException;
+import com.wushiyuan.basicmall.member.vo.UserLoginVo;
 import com.wushiyuan.basicmall.member.vo.UserRegistVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -87,6 +88,36 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         entity.setPassword(encode);
 
         this.baseMapper.insert(entity);
+    }
+
+    /**
+     * @Info 会员登录
+     * @Author wushiyuanwork@outlook.com
+     * @param vo : 登录信息
+     * @return com.wushiyuan.basicmall.member.entity.MemberEntity
+     * @throws
+     * @Date 2020/6/18 19:19
+     * @Version
+     */
+    @Override
+    public MemberEntity login(UserLoginVo vo) {
+        MemberEntity memberEntity = this.baseMapper.selectOne(new QueryWrapper<MemberEntity>()
+                .eq("username", vo.getUserId())
+                .or()
+                .eq("mobile", vo.getUserId())
+                .or()
+                .eq("email", vo.getUserId()));
+        if (memberEntity == null) {
+            return null;
+        } else {
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            boolean matches = bCryptPasswordEncoder.matches(vo.getPassword(), memberEntity.getPassword());
+            if (matches) {
+                return memberEntity;
+            }
+        }
+
+        return null;
     }
 
     /**

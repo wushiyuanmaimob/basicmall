@@ -6,8 +6,10 @@ import java.util.Map;
 import com.wushiyuan.basicmall.member.exception.PhoneExistException;
 import com.wushiyuan.basicmall.member.exception.UserNameExistException;
 import com.wushiyuan.basicmall.member.feign.CouponFeignService;
+import com.wushiyuan.basicmall.member.vo.UserLoginVo;
 import com.wushiyuan.basicmall.member.vo.UserRegistVo;
 import com.wushiyuan.common.exception.BizCodeEnum;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,7 @@ import com.wushiyuan.common.utils.R;
  * @email wushiyuanwork@outlook.com
  * @date 2020-05-15 15:58:51
  */
+@Slf4j
 @RestController
 @RequestMapping("member/member")
 public class MemberController {
@@ -45,6 +48,29 @@ public class MemberController {
         }
 
         return R.ok();
+    }
+
+    /**
+     * @Info 会员登录
+     * @Author wushiyuanwork@outlook.com
+     * @param vo : 登录信息
+     * @return com.wushiyuan.common.utils.R
+     * @throws
+     * @Date 2020/6/18 19:19
+     * @Version
+     */
+    @PostMapping("login")
+    public R<MemberEntity> login(@RequestBody UserLoginVo vo) {
+        MemberEntity member = memberService.login(vo);
+        if (member == null) {
+            return R.error(BizCodeEnum.AUTH_LOGIN_EXCEPTION.getCode(), BizCodeEnum.AUTH_LOGIN_EXCEPTION.getMsg());
+        }
+        R<MemberEntity> r = R.ok();
+        r.put("data", member);
+        r.setData(member);
+        log.info(r.toString());
+        log.info(r.getData().toString());
+        return r;
     }
 
     @RequestMapping("/coupons")

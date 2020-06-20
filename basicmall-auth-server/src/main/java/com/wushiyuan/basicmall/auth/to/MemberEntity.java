@@ -1,12 +1,9 @@
-package com.wushiyuan.basicmall.member.entity;
+package com.wushiyuan.basicmall.auth.to;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 会员
@@ -16,14 +13,12 @@ import lombok.Data;
  * @date 2020-05-15 15:58:51
  */
 @Data
-@TableName("ums_member")
 public class MemberEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * id
 	 */
-	@TableId
 	private Long id;
 	/**
 	 * 会员等级id
@@ -94,7 +89,6 @@ public class MemberEntity implements Serializable {
 	 */
 	private Date createTime;
 
-	@TableField(exist = false)
 	private String token;
 
 }

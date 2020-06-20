@@ -1,5 +1,7 @@
 package com.wushiyuan.basicmall.auth.feign;
 
+import com.wushiyuan.basicmall.auth.to.MemberEntity;
+import com.wushiyuan.basicmall.auth.vo.UserLoginVo;
 import com.wushiyuan.basicmall.auth.vo.UserRegistVo;
 import com.wushiyuan.common.utils.R;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -26,4 +28,16 @@ public interface MemberFeignService {
      */
     @PostMapping("/member/member/regist")
     R regist(@RequestBody UserRegistVo userRegistVo);
+
+    /**
+     * @Info 远程会员服务登录方法
+     * @Author wushiyuanwork@outlook.com
+     * @param vo : 登录信息
+     * @return com.wushiyuan.common.utils.R
+     * @throws
+     * @Date 2020/6/18 18:55
+     * @Version
+     */
+    @PostMapping("/member/member/login")
+    R<MemberEntity> login(@RequestBody UserLoginVo vo);
 }
