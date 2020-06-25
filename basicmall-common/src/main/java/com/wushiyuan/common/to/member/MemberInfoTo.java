@@ -1,4 +1,4 @@
-package com.wushiyuan.basicmall.auth.to;
+package com.wushiyuan.common.to.member;
 
 import lombok.Data;
 

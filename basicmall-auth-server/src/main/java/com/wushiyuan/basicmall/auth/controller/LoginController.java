@@ -6,11 +6,11 @@ import com.wushiyuan.basicmall.auth.constant.MemberConst;
 import com.wushiyuan.basicmall.auth.feign.MemberFeignService;
 import com.wushiyuan.basicmall.auth.feign.ThirdPartyFeignService;
 import com.wushiyuan.basicmall.auth.to.MemberEntity;
-import com.wushiyuan.basicmall.auth.to.MemberInfoTo;
 import com.wushiyuan.basicmall.auth.vo.UserLoginVo;
 import com.wushiyuan.basicmall.auth.vo.UserRegistVo;
 import com.wushiyuan.common.constant.AuthServerConstant;
 import com.wushiyuan.common.exception.BizCodeEnum;
+import com.wushiyuan.common.to.member.MemberInfoTo;
 import com.wushiyuan.common.utils.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
 @RestController
 @RequestMapping("/auth")
 public class LoginController {
@@ -119,16 +118,12 @@ public class LoginController {
     @PostMapping("login")
     public R login(@Valid @RequestBody UserLoginVo vo) {
         try {
-            R<MemberEntity> login = memberFeignService.login(vo);
+            R<MemberInfoTo> login = memberFeignService.login(vo);
             if (login.getCode() == 0) {
-                log.info("登录成功");
+                MemberInfoTo memberInfoTo = login.getData();
                 String token = UUID.randomUUID().toString().replace("-", "");
 
-                String string = JSON.toJSONString(login.get("data"));
-                MemberInfoTo memberInfoTo = JSON.parseObject(string, new TypeReference<MemberInfoTo>() {
-                });
                 memberInfoTo.setToken(token);
-                log.info("###################" + memberInfoTo.toString());
 
                 //设置 session 过期时间
                 redisTemplate.opsForValue().set(MemberConst.LOGIN_SESSION_ID_PREFIX + token, JSON.toJSONString(memberInfoTo), 1, TimeUnit.DAYS);
@@ -136,7 +131,6 @@ public class LoginController {
             }
             return login;
         } catch (Exception e) {
-            log.info(e.getMessage());
             return R.error();
         }
     }

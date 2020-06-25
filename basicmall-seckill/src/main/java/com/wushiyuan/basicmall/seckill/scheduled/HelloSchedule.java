@@ -22,8 +22,8 @@ public class HelloSchedule {
      *      2）、支持定时任务线程池
      *      3）、异步任务
      */
-    @Scheduled(cron = "* * * * * 2")
-    @Async
+//    @Scheduled(cron = "* * * * * 2")
+//    @Async
     public void hello() throws InterruptedException {
         log.info("hello...");
         Thread.sleep(3000);

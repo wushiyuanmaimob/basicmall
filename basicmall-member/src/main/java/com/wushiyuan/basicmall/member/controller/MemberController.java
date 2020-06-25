@@ -3,14 +3,21 @@ package com.wushiyuan.basicmall.member.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.wushiyuan.basicmall.member.exception.PhoneExistException;
 import com.wushiyuan.basicmall.member.exception.UserNameExistException;
 import com.wushiyuan.basicmall.member.feign.CouponFeignService;
 import com.wushiyuan.basicmall.member.vo.UserLoginVo;
 import com.wushiyuan.basicmall.member.vo.UserRegistVo;
 import com.wushiyuan.common.exception.BizCodeEnum;
+import com.wushiyuan.common.to.member.MemberInfoTo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.wushiyuan.basicmall.member.entity.MemberEntity;
@@ -27,6 +34,7 @@ import com.wushiyuan.common.utils.R;
  * @email wushiyuanwork@outlook.com
  * @date 2020-05-15 15:58:51
  */
+
 @Slf4j
 @RestController
 @RequestMapping("member/member")
@@ -50,6 +58,11 @@ public class MemberController {
         return R.ok();
     }
 
+    public R<MemberInfoTo> blockHandler(@RequestBody UserLoginVo vo, BlockException e) {
+        log.error("login被限流了...");
+        return R.error(007, "then fuck");
+    }
+
     /**
      * @Info 会员登录
      * @Author wushiyuanwork@outlook.com
@@ -60,17 +73,25 @@ public class MemberController {
      * @Version
      */
     @PostMapping("login")
-    public R<MemberEntity> login(@RequestBody UserLoginVo vo) {
-        MemberEntity member = memberService.login(vo);
-        if (member == null) {
-            return R.error(BizCodeEnum.AUTH_LOGIN_EXCEPTION.getCode(), BizCodeEnum.AUTH_LOGIN_EXCEPTION.getMsg());
+    @SentinelResource(value = "do-login2345", blockHandler = "blockHandler")
+    public R<MemberInfoTo> login(@RequestBody UserLoginVo vo) {
+
+        //使用 try catch 自定义保护资源
+        try (Entry entry = SphU.entry("do-login")) {
+            MemberEntity member = memberService.login(vo);
+            if (member == null) {
+                return R.error(BizCodeEnum.AUTH_LOGIN_EXCEPTION.getCode(), BizCodeEnum.AUTH_LOGIN_EXCEPTION.getMsg());
+            }
+            R<MemberInfoTo> r = R.ok();
+            MemberInfoTo memberInfoTo = new MemberInfoTo();
+            BeanUtils.copyProperties(member, memberInfoTo);
+            r.setData(memberInfoTo);
+
+            return r;
+        } catch (BlockException ex) {
+            log.error("资源被限流，{}", ex.getMessage());
+            return R.error(BizCodeEnum.TOO_MANY_REQUEST.getCode(), BizCodeEnum.TOO_MANY_REQUEST.getMsg());
         }
-        R<MemberEntity> r = R.ok();
-        r.put("data", member);
-        r.setData(member);
-        log.info(r.toString());
-        log.info(r.getData().toString());
-        return r;
     }
 
     @RequestMapping("/coupons")

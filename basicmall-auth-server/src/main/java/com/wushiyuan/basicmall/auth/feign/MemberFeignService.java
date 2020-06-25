@@ -1,8 +1,9 @@
 package com.wushiyuan.basicmall.auth.feign;
 
-import com.wushiyuan.basicmall.auth.to.MemberEntity;
+import com.wushiyuan.basicmall.auth.feign.fallback.MemberFeignServiceFallBack;
 import com.wushiyuan.basicmall.auth.vo.UserLoginVo;
 import com.wushiyuan.basicmall.auth.vo.UserRegistVo;
+import com.wushiyuan.common.to.member.MemberInfoTo;
 import com.wushiyuan.common.utils.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @Date 2020/6/18 16:05
  * @Version
  **/
-@FeignClient("basicmall-member")
+@FeignClient(value = "basicmall-member", fallback = MemberFeignServiceFallBack.class)
 public interface MemberFeignService {
     /**
      * @Info 远程会员服务注册方法
@@ -39,5 +40,5 @@ public interface MemberFeignService {
      * @Version
      */
     @PostMapping("/member/member/login")
-    R<MemberEntity> login(@RequestBody UserLoginVo vo);
+    R<MemberInfoTo> login(@RequestBody UserLoginVo vo);
 }
