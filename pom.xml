@@ -36,5 +36,6 @@
         <module>basicmall-cart</module>
         <module>basicmall-auth-server</module>
         <module>basicmall-seckill</module>
+        <module>data-structures</module>
     </modules>
 </project>
