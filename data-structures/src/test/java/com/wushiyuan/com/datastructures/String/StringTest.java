@@ -17,7 +17,7 @@ public class StringTest {
 
     //测试字符串的不可变性
     @Test
-    void testString() {
+    void 测试字符串不可变性() {
 //        System.out.println("2345");
         String s1 = "abc";
         String s2 = "abc";
@@ -41,5 +41,38 @@ public class StringTest {
         String s4 = "abc";
         String s = s4.replace('a', 'm');
         System.out.println(s);
+    }
+
+    @Test
+    void 测试StringBuilderBuffer三个函数的执行效率() {
+        long startTime = 0l;
+        long endTime = 0l;
+        String text = "";
+        StringBuffer buffer = new StringBuffer("");
+        StringBuilder builder = new StringBuilder("");
+
+        //开始对比
+        //buffer
+        startTime = System.currentTimeMillis();
+        for (int i = 0; i < 200000; i++) {
+            buffer.append(String.valueOf(i));
+        }
+        endTime = System.currentTimeMillis();
+        System.out.println("buffer花费时间：" + (endTime - startTime));
+
+        //builder
+        startTime = System.currentTimeMillis();
+        for (int i = 0; i < 200000; i++) {
+            builder.append(String.valueOf(i));
+        }
+        endTime = System.currentTimeMillis();
+        System.out.println("builder花费时间：" + (endTime - startTime));
+
+        startTime = System.currentTimeMillis();
+        for (int i = 0; i < 200000; i++) {
+            text += String.valueOf(i);
+        }
+        endTime = System.currentTimeMillis();
+        System.out.println("string 拼接花费时间：" + (endTime - startTime));
     }
 }
