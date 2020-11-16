@@ -1,7 +1,5 @@
 package com.wushiyuan.com.datastructures.queue;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * @ClassName ArrayQueue
  * @Info 使用数组模拟队列
