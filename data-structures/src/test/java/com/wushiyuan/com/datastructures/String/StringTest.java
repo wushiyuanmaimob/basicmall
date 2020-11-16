@@ -14,6 +14,8 @@ public class StringTest {
     //      3、当调用 String 的 replace 方法修改指定字符或字符串时，也需要重新指定内存区域赋值，不能使用原有的 value 进行赋值
     //5、通过字面量的方式（区别于new）给一个字符串赋值，此时的字符串声明在字符串常量池中。
     //6、字符串常量池是不会存储相同内容的字符串的
+
+    //测试字符串的不可变性
     @Test
     void testString() {
 //        System.out.println("2345");
