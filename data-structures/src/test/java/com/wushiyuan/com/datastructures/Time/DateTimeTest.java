@@ -1,4 +1,4 @@
-package Time;
+package com.wushiyuan.com.datastructures.Time;
 
 import org.junit.jupiter.api.Test;
 

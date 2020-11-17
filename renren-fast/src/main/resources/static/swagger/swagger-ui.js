@@ -2299,7 +2299,7 @@ window.Docs = {
     // ES5 15.9.5.43
     // http://es5.github.com/#x15.9.5.43
     // This function returns a String value represent the instance in time
-    // represented by this Date object. The format of the String is the Date Time
+    // represented by this Date object. The format of the String is the Date com.wushiyuan.com.datastructures.Time
     // string format defined in 15.9.1.15. All fields are present in the String.
     // The time zone is always UTC, denoted by the suffix Z. If the time value of
     // this object is not a finite Number a RangeError exception is thrown.
@@ -2451,7 +2451,7 @@ window.Docs = {
                 return date;
             };
 
-            // 15.9.1.15 Date Time String Format.
+            // 15.9.1.15 Date com.wushiyuan.com.datastructures.Time String Format.
             var isoDateExpression = new RegExp('^' +
                 '(\\d{4}|[+-]\\d{6})' + // four-digit year capture or sign +
                                           // 6-digit extended year
