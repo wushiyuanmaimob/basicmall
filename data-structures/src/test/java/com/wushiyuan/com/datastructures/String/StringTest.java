@@ -279,40 +279,106 @@ public class StringTest {
         System.out.println(s1 == s5);   //true
     }
 
+    /**
+     * 测试常见的String算法题目
+     */
     @Test
     void questionOne() {
         String str = "  a b c   ";
-        //
+        System.out.println(myTrim(str));
+
+        String str2 = "abcdefg";
+        String reverse = myReverse(str2, 2, 6);
+        System.out.println(reverse);
+
+        //“ab”在“abkkcadkabkebfkabkskab
+        String s1 = "ab";
+        String s2 = "abkkcadkabkebfkabkskab";
+        System.out.println(getAStrInOtherStrTimes(s1, s2));
+    }
+
+    /**
+     * 模拟一个 trim 方法，去除字符串两端的空格
+     * @param str
+     * @return
+     */
+    public String myTrim(String str) {
         char[] chars = str.toCharArray();
-//        System.out.println(Arrays.toString(chars));
-        Integer firstEmptyCharIndex = null;
-        Integer lastEmptyCharIndex = null;
-        int length = chars.length - 1;
-//        System.out.println("==>" + length);
-        int index = 0;
-        while (index <= length) {
-//            System.out.println(index);
-            if (chars[index] > 32) {
-                firstEmptyCharIndex = index;
+        int start = 0;
+        int end = chars.length - 1;
+        while (start <= end) {
+            if (chars[start] > 32) {
                 break;
+            }
+            start ++;
+        }
+        while (end > 0) {
+            if (chars[end] > 32) {
+                break;
+            }
+            end --;
+        }
+
+        return str.substring(start, end + 1);
+    }
+
+    /**
+     * 将一个字符串进行反转。比如"abcdefg"反转为“abfedcg”
+     * @param str
+     * @return
+     */
+    public String myReverse(String str, Integer start, Integer end) {
+        char[] chars = str.toCharArray();
+        char[] newChars = new char[end - start + 1];
+        int index = 0;
+        int autoIndex = 0;
+        for (char aChar : chars) {
+            if (index >= start && index < end) {
+                newChars[autoIndex] = aChar;
+                autoIndex ++;
             }
             index ++;
         }
-        System.out.println("第一个非空：" + firstEmptyCharIndex);
-
-        while (length > 0) {
-            if (chars[length] > 32) {
-                lastEmptyCharIndex = length;
-                break;
-            }
+        char[] reversedChars = new char[newChars.length];
+        int length = newChars.length - 1;
+        int i = 0;
+        while (length >= 0) {
+            reversedChars[i] = newChars[length];
             length --;
+            i ++;
         }
-        System.out.println("最后一个非空：" + lastEmptyCharIndex);
+        String reversedStr = new String(reversedChars);
 
-        String substring = str.substring(firstEmptyCharIndex, lastEmptyCharIndex + 1);
+        String startStr = str.substring(0, start);
+        String endStr = str.substring(end, str.length());
 
-        System.out.println(substring);
+        return String.format("%s%s%s", startStr, reversedStr, endStr);
     }
+
+    /**
+     * 获取一个字符串str在另一个字符串otherStr中出现的次数
+     * @param str
+     * @param otherStr
+     * @return
+     */
+    public int getAStrInOtherStrTimes(String str, String otherStr) {
+        int count = 0;
+        int index = 0;
+
+//        while ((index = otherStr.indexOf(str)) != -1) {
+//            count ++;
+//            otherStr = otherStr.substring(index + str.length());
+//        }
+
+        while ((index = otherStr.indexOf(str, index)) != -1) {
+            count ++;
+            index += str.length();
+        }
+
+        return count;
+    }
+
+
 
     /**
      * String、StringBuffer、StringBuilder三者的异同
